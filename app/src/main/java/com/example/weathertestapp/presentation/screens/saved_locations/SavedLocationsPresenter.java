@@ -41,7 +41,8 @@ public class SavedLocationsPresenter implements SavedLocationsContract.Presenter
                 .subscribe(savedLocations -> {
                     mSavedLocation = savedLocations;
                     mView.hideProgress();
-                    mView.setLocationsAdapterList(savedLocations);
+                    if (savedLocations.isEmpty()) mView.showPlaceHolder();
+                    else mView.setLocationsAdapterList(savedLocations);
                 }, throwableConsumer));
 
     }

@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -52,6 +53,8 @@ public class SavedLocationFragment extends Fragment implements SavedLocationsCon
 
     @BindView(R.id.rvCities)
     RecyclerView rvCities;
+    @BindView(R.id.rlPlaceholder)
+    RelativeLayout rlPaceHolder;
     @BindView(R.id.pbAddresses)
     ProgressBar mProgressBar;
     @BindString(R.string.google_maps_key)
@@ -126,6 +129,8 @@ public class SavedLocationFragment extends Fragment implements SavedLocationsCon
 
     @Override
     public void setLocationsAdapterList(List<SavedLocation> _list) {
+        rvCities.setVisibility(View.VISIBLE);
+        rlPaceHolder.setVisibility(View.GONE);
         mLocationListAdapter.setLocations(_list);
     }
 
@@ -162,6 +167,12 @@ public class SavedLocationFragment extends Fragment implements SavedLocationsCon
         intent.putExtra(Constants.KEY_LOCATION_RESULT, _selectedCity);
         mActivity.setResult(RESULT_OK, intent);
         mActivity.finish();
+    }
+
+    @Override
+    public void showPlaceHolder() {
+        rvCities.setVisibility(View.GONE);
+        rlPaceHolder.setVisibility(View.VISIBLE);
     }
 
     @Override

@@ -3,4 +3,7 @@
 
     <!-- Buttons -->
     <string name="button_save">Save</string>
+
+    <!-- Texts -->
+    <string name="text_empty_saved_list">You don\'t have any selected locations</string>
 </resources>

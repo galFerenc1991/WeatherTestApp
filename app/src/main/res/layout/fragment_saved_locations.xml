@@ -27,4 +27,27 @@
         android:padding="@dimen/margin_medium"
         android:src="@drawable/ic_search_white" />
 
+    <RelativeLayout
+        android:id="@+id/rlPlaceholder"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/ivLocationEmpty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@drawable/ic_location_off" />
+
+        <TextView
+            style="@style/EmptyLocationTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ivLocationEmpty"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/margin_default"
+            android:text="@string/text_empty_saved_list" />
+    </RelativeLayout>
+
 </RelativeLayout>

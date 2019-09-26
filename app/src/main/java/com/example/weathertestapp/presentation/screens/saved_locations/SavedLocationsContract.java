@@ -20,6 +20,8 @@ public interface SavedLocationsContract {
         void returnPlace(LatLng _selectedCity);
 
         void setLocationsAdapterList(List<SavedLocation> _list);
+
+        void showPlaceHolder();
     }
 
     interface Presenter extends BasePresenter {
