@@ -1,9 +1,12 @@
 package com.example.weathertestapp.presentation.screens.saved_locations;
 
+import com.example.weathertestapp.data.database.SavedLocation;
 import com.example.weathertestapp.data.exeptions.ConnectionLostException;
 import com.example.weathertestapp.domain.location_repository.SavedLocationRepository;
 import com.example.weathertestapp.presentation.utils.ToastManager;
 import com.google.android.gms.maps.model.LatLng;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -20,6 +23,7 @@ public class SavedLocationsPresenter implements SavedLocationsContract.Presenter
     private SavedLocationsContract.View mView;
     private CompositeDisposable mCompositeDisposable;
     private SavedLocationRepository mSavedLocationRepository;
+    private List<SavedLocation> mSavedLocation;
 
     @Inject
     public SavedLocationsPresenter(SavedLocationRepository _savedLocationRepository) {
@@ -35,6 +39,7 @@ public class SavedLocationsPresenter implements SavedLocationsContract.Presenter
         mCompositeDisposable.add(mSavedLocationRepository.getSavedLocationList()
 
                 .subscribe(savedLocations -> {
+                    mSavedLocation = savedLocations;
                     mView.hideProgress();
                     mView.setLocationsAdapterList(savedLocations);
                 }, throwableConsumer));
@@ -52,11 +57,6 @@ public class SavedLocationsPresenter implements SavedLocationsContract.Presenter
     };
 
     @Override
-    public void clickedBack() {
-        mView.closeScreen();
-    }
-
-    @Override
     public void clickedSelectPlace() {
         mView.openAutocompletePlaceScreen();
     }
@@ -66,10 +66,12 @@ public class SavedLocationsPresenter implements SavedLocationsContract.Presenter
         mView.returnPlace(_selectedCity);
     }
 
-//    @Override
-//    public void selectItem(DeliveryPlaceDH item, int position) {
-//        mView.returnPlace(item.getCountry());
-//    }
+    @Override
+    public void selectItem(int position) {
+        SavedLocation savedLocation = mSavedLocation.get(position);
+        LatLng latLng = new LatLng(savedLocation.getLat(), savedLocation.getLon());
+        mView.returnPlace(latLng);
+    }
 
     @Override
     public void unsubscribe() {

@@ -5,14 +5,15 @@
     android:id="@+id/cvContainer_MLI"
     android:layout_width="match_parent"
     android:layout_height="50dp"
-    android:layout_margin="@dimen/padding_default"
-    app:cardCornerRadius="15dp">
+    android:layout_margin="@dimen/margin_quart"
+    app:cardCornerRadius="5dp">
 
     <TextView
         android:id="@+id/tvCityName"
         style="@style/SavedLocationTextStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_default"
         android:layout_gravity="center_vertical"
         android:text="SavedLocation" />
 

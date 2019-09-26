@@ -22,7 +22,8 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_half"
             android:background="@drawable/bg_save_button"
-            android:text="Save" />
+            android:text="@string/button_save"
+            android:visibility="gone" />
 
         <ImageView
             android:id="@+id/ivSelect"
@@ -60,15 +61,13 @@
                 android:id="@+id/tvCityNameAndTemp"
                 style="@style/WeatherInfoTextStyles"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:hint="Uzgorod" />
+                android:layout_height="wrap_content" />
 
             <TextView
                 android:id="@+id/tvDescription"
                 style="@style/WeatherInfoTextStyles"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:hint="123" />
+                android:layout_height="wrap_content" />
         </LinearLayout>
 
 
@@ -83,15 +82,13 @@
                 android:id="@+id/tvMinMaxTemp"
                 style="@style/WeatherInfoTextStyles"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:hint="123" />
+                android:layout_height="wrap_content" />
 
             <TextView
                 android:id="@+id/tvWindSpeed"
                 style="@style/WeatherInfoTextStyles"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:hint="234" />
+                android:layout_height="wrap_content" />
 
         </LinearLayout>
 

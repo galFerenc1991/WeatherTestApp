@@ -2,6 +2,7 @@ package com.example.weathertestapp.presentation.screens.map;
 
 import com.example.weathertestapp.data.database.SavedLocation;
 import com.example.weathertestapp.data.exeptions.ConnectionLostException;
+import com.example.weathertestapp.data.model.WeatherResponse;
 import com.example.weathertestapp.domain.location_repository.SavedLocationRepository;
 import com.example.weathertestapp.domain.weather_repository.WeatherRepository;
 import com.example.weathertestapp.presentation.utils.ToastManager;
@@ -37,20 +38,27 @@ public class MapPresenter implements MapContract.Presenter {
         mView.showProgressMain();
         mCompositeDisposable.add(mWeatherRepository.getWeather(_lat, _lon)
                 .subscribe(weatherResponse -> {
-                    mCurrentLocation.cityName = weatherResponse.getName();
-                    mCurrentLocation.id = weatherResponse.getId();
-                    mCurrentLocation.lat = weatherResponse.getlat();
-                    mCurrentLocation.lon = weatherResponse.getLon();
-
                     mView.hideProgress();
+                    createCurrentLocationForSave(weatherResponse);
                     mView.showWeather(weatherResponse);
                 }, throwableConsumer));
+    }
+
+    private void createCurrentLocationForSave(WeatherResponse _weatherResponse) {
+        mCurrentLocation = new SavedLocation.Builder()
+                .setID(_weatherResponse.getId())
+                .setCityName(_weatherResponse.getName())
+                .setLat(_weatherResponse.getlat())
+                .setLon(_weatherResponse.getLon())
+                .build();
     }
 
     @Override
     public void saveLocation() {
         mCompositeDisposable.add(mSavedLocationRepository.addToDB(mCurrentLocation)
-                .subscribe(this::saveLocation));
+                .subscribe(() -> {
+                    ToastManager.showToast("Location saved");
+                }));
     }
 
     private Consumer<Throwable> throwableConsumer = throwable -> {

@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
@@ -24,9 +23,7 @@ import com.example.weathertestapp.presentation.screens.saved_locations.di.Dagger
 import com.example.weathertestapp.presentation.screens.saved_locations.di.SavedLocationComponent;
 import com.example.weathertestapp.presentation.screens.saved_locations.di.SavedLocationModule;
 import com.example.weathertestapp.presentation.utils.Constants;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.model.TypeFilter;
@@ -39,6 +36,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -56,6 +54,8 @@ public class SavedLocationFragment extends Fragment implements SavedLocationsCon
     RecyclerView rvCities;
     @BindView(R.id.pbAddresses)
     ProgressBar mProgressBar;
+    @BindString(R.string.google_maps_key)
+    String mApiKey;
 
     private SavedLocationComponent mSavedLocationComponent;
     private AppCompatActivity mActivity;
@@ -113,6 +113,9 @@ public class SavedLocationFragment extends Fragment implements SavedLocationsCon
         rvCities.setLayoutManager(new LinearLayoutManager(mActivity));
         rvCities.setAdapter(mLocationListAdapter);
 
+        mLocationListAdapter.setOnCardClickListener((view, position, viewType) ->
+                mPresenter.selectItem(position));
+
         mPresenter.subscribe(this);
     }
 
@@ -129,7 +132,7 @@ public class SavedLocationFragment extends Fragment implements SavedLocationsCon
     @Override
     public void openAutocompletePlaceScreen() {
         if (!Places.isInitialized()) {
-            Places.initialize(mActivity.getApplicationContext(), "AIzaSyCll85CJCIStHE9TqoaPYUE3ohXRYV7jXU");
+            Places.initialize(mActivity.getApplicationContext(), mApiKey);
         }
         List<Place.Field> placeFields = new ArrayList<>(Arrays.asList(Place.Field.values()));
         Intent autocompleteIntent =
@@ -148,10 +151,6 @@ public class SavedLocationFragment extends Fragment implements SavedLocationsCon
                     Place place = Autocomplete.getPlaceFromIntent(data);
                     LatLng selectedCity = place.getLatLng();
                     mPresenter.placeSelected(selectedCity);
-//                    mMap.clear();
-//                    mMap.addMarker(new MarkerOptions().position(currentPosition));
-//                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentPosition, Constants.GOOGLE_MAP_ZOOM));
-//                    mPresenter.getWeather(currentPosition.latitude, currentPosition.longitude);
                 }
         }
 
@@ -173,11 +172,6 @@ public class SavedLocationFragment extends Fragment implements SavedLocationsCon
     @Override
     public void hideProgress() {
         mProgressBar.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void closeScreen() {
-        mActivity.finish();
     }
 
     @Override

@@ -28,4 +28,38 @@ public class SavedLocation {
     public double getLon() {
         return lon;
     }
+
+    public static class Builder {
+
+        protected SavedLocation savedLocation;
+
+        public Builder() {
+            savedLocation = new SavedLocation();
+        }
+
+        public Builder setID(long _id) {
+            savedLocation.id = _id;
+            return this;
+        }
+
+        public Builder setCityName(String _name) {
+            savedLocation.cityName = _name;
+            return this;
+        }
+
+
+        public Builder setLat(double _lat) {
+            savedLocation.lat = _lat;
+            return this;
+        }
+
+        public Builder setLon(double _lon) {
+            savedLocation.lon = _lon;
+            return this;
+        }
+
+        public SavedLocation build() {
+            return savedLocation;
+        }
+    }
 }

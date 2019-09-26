@@ -17,8 +17,6 @@ public interface SavedLocationsContract {
     interface View extends BaseView<Presenter> {
         void openAutocompletePlaceScreen();
 
-        void closeScreen();
-
         void returnPlace(LatLng _selectedCity);
 
         void setLocationsAdapterList(List<SavedLocation> _list);
@@ -27,12 +25,10 @@ public interface SavedLocationsContract {
     interface Presenter extends BasePresenter {
         void subscribe(SavedLocationsContract.View _view);
 
-        void clickedBack();
-
         void clickedSelectPlace();
 
         void placeSelected(LatLng _selectedCity);
 
-//        void selectItem(DeliveryPlaceDH item, int position);
+        void selectItem(int position);
     }
 }

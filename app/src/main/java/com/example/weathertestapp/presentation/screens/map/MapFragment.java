@@ -37,16 +37,8 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.libraries.places.api.Places;
-import com.google.android.libraries.places.api.model.Place;
-import com.google.android.libraries.places.api.model.TypeFilter;
-import com.google.android.libraries.places.widget.Autocomplete;
-import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Objects;
 
 import javax.inject.Inject;
@@ -149,6 +141,7 @@ public class MapFragment extends Fragment implements MapContract.View, OnMapRead
     @Override
     public void showWeather(WeatherResponse _weatherResponse) {
         llRoot.setVisibility(View.VISIBLE);
+        btnSave.setVisibility(View.VISIBLE);
         tvCityNameAndTemp.setText(_weatherResponse.getCityAndCurrentTemp());
         tvDescription.setText(_weatherResponse.getDescription());
         tvMinMaxTemp.setText(_weatherResponse.getMinMaxTemp());
@@ -213,6 +206,7 @@ public class MapFragment extends Fragment implements MapContract.View, OnMapRead
                     mLocationManager.updateLocation();
             case Constants.REQUEST_CODE_ACTIVITY_SELECT_PLACE:
                 if (resultCode == RESULT_OK && data != null) {
+                    btnSave.setVisibility(View.GONE);
                     mLocationManager.stopUpdateLocation();
                     liveData.removeObservers(this);
                     LatLng currentPosition = Objects.requireNonNull(data.getExtras()).getParcelable(Constants.KEY_LOCATION_RESULT);
