@@ -15,18 +15,23 @@ import com.facebook.flipper.plugins.inspector.InspectorFlipperPlugin;
 import com.facebook.flipper.plugins.network.NetworkFlipperPlugin;
 import com.facebook.soloader.SoLoader;
 
+import javax.inject.Inject;
+
 public class WeatherTestApplication extends Application {
 
+    @Inject
     protected ConnectivityManager mConnectivityManager;
     private NetworkFlipperPlugin mNetworkFlipperPlugin;
 
     private AppComponent mAppComponent;
+    private static WeatherTestApplication mInstance;
 
 
     @Override
     public void onCreate() {
         super.onCreate();
         SoLoader.init(this, false);
+        mInstance = this;
 
         mNetworkFlipperPlugin = new NetworkFlipperPlugin();
 
@@ -45,6 +50,14 @@ public class WeatherTestApplication extends Application {
                 .application(this)
                 .build();
         mAppComponent.inject(this);
+    }
+
+    public AppComponent getAppComponent() {
+        return mAppComponent;
+    }
+
+    public static WeatherTestApplication getApplication() {
+        return mInstance;
     }
 
     public NetworkFlipperPlugin getNetworkFlipperPlugin() {

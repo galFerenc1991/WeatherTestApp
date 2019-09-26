@@ -34,7 +34,7 @@ public class MapModule {
 
     @PerFragment
     @Provides
-    public WeatherRepository provideWeatherRepository(WeatherRepositoryImpl _weatherRepository) {
+    public WeatherRepository provideWeatherRepository(WeatherRepositoryImpl _weatherRepository){
         return _weatherRepository;
     }
 }

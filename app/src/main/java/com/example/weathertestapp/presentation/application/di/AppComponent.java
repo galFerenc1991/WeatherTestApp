@@ -1,5 +1,9 @@
 package com.example.weathertestapp.presentation.application.di;
 
+import android.net.ConnectivityManager;
+
+import com.example.weathertestapp.data.Rest;
+import com.example.weathertestapp.data.database.AppDatabase;
 import com.example.weathertestapp.presentation.application.WeatherTestApplication;
 
 import javax.inject.Singleton;
@@ -12,16 +16,12 @@ import dagger.Component;
 public interface AppComponent {
     void inject(WeatherTestApplication _weatherTestApplication);
 
+    Rest provideRest();
+    AppDatabase provideDatabase();
 
     @Component.Builder
     interface Builder {
         AppComponent build();
         @BindsInstance Builder application(WeatherTestApplication _weatherTestApplication);
     }
-
-//    @Component.Builder
-//    interface Builder {
-//        AppComponent build();
-//        Builder appModule(AppModule appModule);
-//    }
 }

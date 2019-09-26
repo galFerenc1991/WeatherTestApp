@@ -13,7 +13,6 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.OnLifecycleEvent;
 
-import com.example.weathertestapp.presentation.base.annotation.PerFragment;
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -27,7 +26,6 @@ import com.google.android.gms.tasks.Task;
 
 import javax.inject.Inject;
 
-@PerFragment
 public class LocationManager implements LifecycleObserver {
 
     private final AppCompatActivity mActivity;

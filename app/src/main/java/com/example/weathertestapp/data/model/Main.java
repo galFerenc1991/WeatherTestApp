@@ -12,16 +12,16 @@ public class Main implements Parcelable {
     @SerializedName("temp_max")
     private double maxTemp;
 
-    public double getTemp() {
-        return temp;
+    public int getTemp() {
+        return (int) temp - 273;
     }
 
-    public double getMinTemp() {
-        return minTemp;
+    public int getMinTemp() {
+        return (int) minTemp - 273;
     }
 
-    public double getMaxTemp() {
-        return maxTemp;
+    public int getMaxTemp() {
+        return (int) maxTemp - 273;
     }
 
 

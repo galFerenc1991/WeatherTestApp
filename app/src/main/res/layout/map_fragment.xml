@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -10,70 +9,92 @@
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
 
-    <LinearLayout
-        android:id="@+id/rlRootLayout_MLI"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/colorPrimaryTransparent">
+        android:layout_height="50dp"
+        android:background="@color/colorPrimary">
+
+        <Button
+            android:id="@+id/btnSave"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_half"
+            android:background="@drawable/bg_save_button"
+            android:text="Save" />
 
         <ImageView
-            android:id="@+id/ivMoviePoster_MLI"
-            android:layout_width="150dp"
-            android:layout_height="match_parent" />
+            android:id="@+id/ivSelect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="@dimen/margin_half"
+            android:src="@drawable/ic_search" />
+    </RelativeLayout>
 
-        <!--<LinearLayout-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_margin="@dimen/margin_half"-->
-            <!--android:orientation="vertical">-->
+    <LinearLayout
+        android:id="@+id/llRoot"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="@dimen/margin_default"
+        android:background="@drawable/bg_weather"
+        android:orientation="horizontal"
+        android:visibility="gone">
 
-            <!--<TextView-->
-                <!--android:id="@+id/tvMovieName_MLI"-->
-                <!--style="@style/MovieListTitleTextStyle"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:hint="Title" />-->
+        <ImageView
+            android:id="@+id/ivWeatherImage"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_gravity="center_vertical" />
 
-            <!--<LinearLayout-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_marginTop="@dimen/margin_default"-->
-                <!--android:layout_marginBottom="@dimen/margin_default"-->
-                <!--android:orientation="horizontal">-->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="@dimen/margin_half"
+            android:orientation="vertical">
 
-                <!--<TextView-->
-                    <!--android:id="@+id/tvRate_MLI"-->
-                    <!--style="@style/MovieListTextStyle"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:drawableStart="@drawable/ic_favorite"-->
-                    <!--android:hint="123" />-->
+            <TextView
+                android:id="@+id/tvCityNameAndTemp"
+                style="@style/WeatherInfoTextStyles"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="Uzgorod" />
 
-                <!--<TextView-->
-                    <!--android:id="@+id/tvLike_MLI"-->
-                    <!--style="@style/MovieListTextStyle"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_marginStart="@dimen/margin_default"-->
-                    <!--android:layout_marginEnd="@dimen/margin_default"-->
-                    <!--android:drawableStart="@drawable/ic_star"-->
-                    <!--android:hint="234"-->
-                    <!--android:maxLines="1" />-->
+            <TextView
+                android:id="@+id/tvDescription"
+                style="@style/WeatherInfoTextStyles"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="123" />
+        </LinearLayout>
 
-            <!--</LinearLayout>-->
 
-            <!--<TextView-->
-                <!--android:id="@+id/tvOverview_MLI"-->
-                <!--style="@style/MovieOverviewTextStyle"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:ellipsize="end"-->
-                <!--android:hint="OVERVIEW"-->
-                <!--android:maxLines="6" />-->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="@dimen/margin_half"
+            android:orientation="vertical">
 
-        <!--</LinearLayout>-->
+            <TextView
+                android:id="@+id/tvMinMaxTemp"
+                style="@style/WeatherInfoTextStyles"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="123" />
+
+            <TextView
+                android:id="@+id/tvWindSpeed"
+                style="@style/WeatherInfoTextStyles"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="234" />
+
+        </LinearLayout>
+
 
     </LinearLayout>
 
@@ -83,7 +104,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:layout_gravity="center"
         android:visibility="gone"
         tools:visibility="visible" />
+
 </RelativeLayout>

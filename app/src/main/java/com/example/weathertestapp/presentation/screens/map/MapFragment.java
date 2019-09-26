@@ -1,13 +1,15 @@
 package com.example.weathertestapp.presentation.screens.map;
 
-import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -19,10 +21,13 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 
 import com.example.weathertestapp.R;
+import com.example.weathertestapp.data.RestConstants;
 import com.example.weathertestapp.data.model.WeatherResponse;
+import com.example.weathertestapp.presentation.application.WeatherTestApplication;
 import com.example.weathertestapp.presentation.screens.map.di.DaggerMapComponent;
 import com.example.weathertestapp.presentation.screens.map.di.MapComponent;
 import com.example.weathertestapp.presentation.screens.map.di.MapModule;
+import com.example.weathertestapp.presentation.screens.saved_locations.SavedLocationsActivity;
 import com.example.weathertestapp.presentation.utils.Constants;
 import com.example.weathertestapp.presentation.utils.LocationManager;
 import com.example.weathertestapp.presentation.utils.ToastManager;
@@ -32,10 +37,25 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.model.TypeFilter;
+import com.google.android.libraries.places.widget.Autocomplete;
+import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
+import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
+import static android.app.Activity.RESULT_OK;
 
 public class MapFragment extends Fragment implements MapContract.View, OnMapReadyCallback {
 
@@ -45,16 +65,29 @@ public class MapFragment extends Fragment implements MapContract.View, OnMapRead
     private GoogleMap mMap;
     @BindView(R.id.pbMain)
     ProgressBar pbMain;
-    protected AppCompatActivity mActivity;
+    @BindView(R.id.llRoot)
+    LinearLayout llRoot;
+    @BindView(R.id.tvCityNameAndTemp)
+    TextView tvCityNameAndTemp;
+    @BindView(R.id.tvDescription)
+    TextView tvDescription;
+    @BindView(R.id.tvMinMaxTemp)
+    TextView tvMinMaxTemp;
+    @BindView(R.id.tvWindSpeed)
+    TextView tvWindSpeed;
+    @BindView(R.id.btnSave)
+    TextView btnSave;
+    @BindView(R.id.ivWeatherImage)
+    ImageView ivWeatherImage;
+    private AppCompatActivity mActivity;
+    private LiveData<Location> liveData;
 
     private SupportMapFragment mapFragment;
     @Inject
     LocationManager mLocationManager;
 
     public static MapFragment newInstance() {
-
         Bundle args = new Bundle();
-
         MapFragment fragment = new MapFragment();
         fragment.setArguments(args);
         return fragment;
@@ -80,8 +113,9 @@ public class MapFragment extends Fragment implements MapContract.View, OnMapRead
     private void createComponent() {
         if (mMapComponent != null) return;
         mMapComponent = DaggerMapComponent.builder()
-                .mapModule(new MapModule(mActivity)
-                ).build();
+                .appComponent(WeatherTestApplication.getApplication().getAppComponent())
+                .mapModule(new MapModule(mActivity))
+                .build();
     }
 
     private void inject() {
@@ -92,6 +126,7 @@ public class MapFragment extends Fragment implements MapContract.View, OnMapRead
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.map_fragment, container, false);
+        ButterKnife.bind(this, rootView);
 
         if (mapFragment == null) {
             mapFragment = SupportMapFragment.newInstance();
@@ -102,9 +137,9 @@ public class MapFragment extends Fragment implements MapContract.View, OnMapRead
     }
 
     private void initLocationLiveData() {
-        LiveData<Location> liveData = mLocationManager.getData();
+        liveData = mLocationManager.getData();
         liveData.observe(this, location -> {
-            mPresenter.getWeather(location);
+            mPresenter.getWeather(location.getLatitude(), location.getLongitude());
             LatLng currentPosition = new LatLng(location.getLatitude(), location.getLongitude());
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentPosition, Constants.GOOGLE_MAP_ZOOM));
             mMap.addMarker(new MarkerOptions().position(currentPosition));
@@ -113,7 +148,16 @@ public class MapFragment extends Fragment implements MapContract.View, OnMapRead
 
     @Override
     public void showWeather(WeatherResponse _weatherResponse) {
-
+        llRoot.setVisibility(View.VISIBLE);
+        tvCityNameAndTemp.setText(_weatherResponse.getCityAndCurrentTemp());
+        tvDescription.setText(_weatherResponse.getDescription());
+        tvMinMaxTemp.setText(_weatherResponse.getMinMaxTemp());
+        tvWindSpeed.setText(_weatherResponse.getWindSpeed());
+        Picasso.with(getContext())
+                .load(RestConstants.BASE_IMAGE_URL + _weatherResponse.getWeatherIcon())
+                .fit()
+                .centerCrop()
+                .into(ivWeatherImage);
     }
 
     @Override
@@ -124,6 +168,7 @@ public class MapFragment extends Fragment implements MapContract.View, OnMapRead
     @Override
     public void hideProgress() {
         pbMain.setVisibility(View.GONE);
+        llRoot.setVisibility(View.GONE);
     }
 
     private void checkLocationPermission() {
@@ -148,11 +193,38 @@ public class MapFragment extends Fragment implements MapContract.View, OnMapRead
         }
     }
 
-//    @OnActivityResult(Constants.PERMISSIONS_REQUEST_CHECK_SETTINGS)
-//    void result(int resultCode) {
-//        if (resultCode == Activity.RESULT_OK)
-//            mLocationManager.updateLocation();
-//    }
+    @OnClick(R.id.btnSave)
+    void save() {
+        mPresenter.saveLocation();
+    }
+
+    @OnClick(R.id.ivSelect)
+    void selectPlace() {
+        Intent intent = new Intent(getContext(), SavedLocationsActivity.class);
+        startActivityForResult(intent, Constants.REQUEST_CODE_ACTIVITY_SELECT_PLACE);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case Constants.PERMISSIONS_REQUEST_CHECK_SETTINGS:
+                if (resultCode == RESULT_OK)
+                    mLocationManager.updateLocation();
+            case Constants.REQUEST_CODE_ACTIVITY_SELECT_PLACE:
+                if (resultCode == RESULT_OK && data != null) {
+                    mLocationManager.stopUpdateLocation();
+                    liveData.removeObservers(this);
+                    LatLng currentPosition = Objects.requireNonNull(data.getExtras()).getParcelable(Constants.KEY_LOCATION_RESULT);
+                    mMap.clear();
+                    assert currentPosition != null;
+                    mMap.addMarker(new MarkerOptions().position(currentPosition));
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentPosition, Constants.GOOGLE_MAP_ZOOM));
+                    mPresenter.getWeather(currentPosition.latitude, currentPosition.longitude);
+                }
+        }
+
+    }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {

@@ -1,8 +1,8 @@
 package com.example.weathertestapp.domain.weather_repository;
 
-import android.location.Location;
 
 import com.example.weathertestapp.data.Rest;
+import com.example.weathertestapp.data.RestConstants;
 import com.example.weathertestapp.data.model.WeatherResponse;
 import com.example.weathertestapp.data.service.WeatherService;
 import com.example.weathertestapp.domain.NetworkRepository;
@@ -21,10 +21,10 @@ public class WeatherRepositoryImpl extends NetworkRepository implements WeatherR
     }
 
     @Override
-    public Observable<WeatherResponse> getWeather(Location _location) {
-        return getNetworkObservable(mWeatherService.getCurrentWeather("ua",
-                _location.getLatitude(),
-                _location.getLongitude()));
+    public Observable<WeatherResponse> getWeather(double _lat, double _lon) {
+        return getNetworkObservable(mWeatherService.getCurrentWeather(RestConstants.WEATHER_RESPONSE_LANGUAGE,
+                _lat,
+                _lon));
     }
 
 }
