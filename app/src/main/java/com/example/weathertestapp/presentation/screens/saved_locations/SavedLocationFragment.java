@@ -56,7 +56,7 @@ public class SavedLocationFragment extends Fragment implements SavedLocationsCon
     @BindView(R.id.rlPlaceholder)
     RelativeLayout rlPaceHolder;
     @BindView(R.id.pbAddresses)
-    ProgressBar mProgressBar;
+    ProgressBar progressBar;
     @BindString(R.string.google_maps_key)
     String mApiKey;
 
@@ -177,12 +177,12 @@ public class SavedLocationFragment extends Fragment implements SavedLocationsCon
 
     @Override
     public void showProgressMain() {
-        mProgressBar.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideProgress() {
-        mProgressBar.setVisibility(View.GONE);
+        progressBar.setVisibility(View.GONE);
     }
 
     @Override

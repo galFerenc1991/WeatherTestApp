@@ -62,15 +62,15 @@ public class LocationListAdapter extends RecyclerView.Adapter<LocationListViewHo
         notifyItemRangeInserted(oldSize, mLocationList.size());
     }
 
-    public SavedLocation getItem(int position) {
-        if (0 <= position && position < mLocationList.size()) {
-            return mLocationList.get(position);
+    public SavedLocation getItem(int _position) {
+        if (0 <= _position && _position < mLocationList.size()) {
+            return mLocationList.get(_position);
         } else {
             return null;
         }
     }
 
-    public void setOnCardClickListener(OnCardClickListener onCardClickListener) {
-        this.mOnCardClickListener = onCardClickListener;
+    public void setOnCardClickListener(OnCardClickListener _onCardClickListener) {
+        this.mOnCardClickListener = _onCardClickListener;
     }
 }

@@ -19,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 import com.example.weathertestapp.R;
 import com.example.weathertestapp.data.RestConstants;
@@ -72,9 +73,10 @@ public class MapFragment extends Fragment implements MapContract.View, OnMapRead
     @BindView(R.id.ivWeatherImage)
     ImageView ivWeatherImage;
     private AppCompatActivity mActivity;
-    private LiveData<Location> liveData;
+    private LiveData<Location> mLiveData;
+    private MutableLiveData<LatLng> mLocationLiveData = new MutableLiveData<>();
 
-    private SupportMapFragment mapFragment;
+    private SupportMapFragment mMapFragment;
     @Inject
     LocationManager mLocationManager;
 
@@ -94,6 +96,10 @@ public class MapFragment extends Fragment implements MapContract.View, OnMapRead
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            LatLng currentLatLong = savedInstanceState.getParcelable(Constants.KEY_CURRENT_LOCATION);
+            mLocationLiveData.setValue(currentLatLong);
+        }
         checkLocationPermission();
         createComponent();
         inject();
@@ -120,17 +126,26 @@ public class MapFragment extends Fragment implements MapContract.View, OnMapRead
         View rootView = inflater.inflate(R.layout.map_fragment, container, false);
         ButterKnife.bind(this, rootView);
 
-        if (mapFragment == null) {
-            mapFragment = SupportMapFragment.newInstance();
+        if (mMapFragment == null) {
+            mMapFragment = SupportMapFragment.newInstance();
         }
-        mapFragment.getMapAsync(this);
-        getChildFragmentManager().beginTransaction().replace(R.id.map, mapFragment).commit();
+        mMapFragment.getMapAsync(this);
+        getChildFragmentManager().beginTransaction().replace(R.id.map, mMapFragment).commit();
         return rootView;
     }
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (savedInstanceState == null) {
+            mLocationManager.updateLocation();
+        }
+    }
+
     private void initLocationLiveData() {
-        liveData = mLocationManager.getData();
-        liveData.observe(this, location -> {
+        mLiveData = mLocationManager.getData();
+        mLiveData.observe(this, location -> {
+            mMap.clear();
             mPresenter.getWeather(location.getLatitude(), location.getLongitude());
             LatLng currentPosition = new LatLng(location.getLatitude(), location.getLongitude());
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentPosition, Constants.GOOGLE_MAP_ZOOM));
@@ -208,21 +223,31 @@ public class MapFragment extends Fragment implements MapContract.View, OnMapRead
                 if (resultCode == RESULT_OK && data != null) {
                     btnSave.setVisibility(View.GONE);
                     mLocationManager.stopUpdateLocation();
-                    liveData.removeObservers(this);
+                    mLiveData.removeObservers(this);
                     LatLng currentPosition = Objects.requireNonNull(data.getExtras()).getParcelable(Constants.KEY_LOCATION_RESULT);
-                    mMap.clear();
-                    assert currentPosition != null;
-                    mMap.addMarker(new MarkerOptions().position(currentPosition));
-                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentPosition, Constants.GOOGLE_MAP_ZOOM));
-                    mPresenter.getWeather(currentPosition.latitude, currentPosition.longitude);
+                    mLocationLiveData.setValue(currentPosition);
                 }
         }
 
     }
 
     @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(Constants.KEY_CURRENT_LOCATION, mPresenter.getCurrentCoordinates());
+    }
+
+    @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        LiveData<LatLng> latLngLiveData = mLocationLiveData;
+        latLngLiveData.observe(this, currentPosition -> {
+            mMap.clear();
+            assert currentPosition != null;
+            mMap.addMarker(new MarkerOptions().position(currentPosition));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentPosition, Constants.GOOGLE_MAP_ZOOM));
+            mPresenter.getWeather(currentPosition.latitude, currentPosition.longitude);
+        });
     }
 
     @Override

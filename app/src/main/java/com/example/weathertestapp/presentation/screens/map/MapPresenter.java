@@ -6,6 +6,7 @@ import com.example.weathertestapp.data.model.WeatherResponse;
 import com.example.weathertestapp.domain.location_repository.SavedLocationRepository;
 import com.example.weathertestapp.domain.weather_repository.WeatherRepository;
 import com.example.weathertestapp.presentation.utils.ToastManager;
+import com.google.android.gms.maps.model.LatLng;
 
 import javax.inject.Inject;
 
@@ -48,7 +49,7 @@ public class MapPresenter implements MapContract.Presenter {
         mCurrentLocation = new SavedLocation.Builder()
                 .setID(_weatherResponse.getId())
                 .setCityName(_weatherResponse.getName())
-                .setLat(_weatherResponse.getlat())
+                .setLat(_weatherResponse.getLat())
                 .setLon(_weatherResponse.getLon())
                 .build();
     }
@@ -59,6 +60,11 @@ public class MapPresenter implements MapContract.Presenter {
                 .subscribe(() -> {
                     ToastManager.showToast("Location saved");
                 }));
+    }
+
+    @Override
+    public LatLng getCurrentCoordinates() {
+        return new LatLng(mCurrentLocation.getLat(), mCurrentLocation.getLon());
     }
 
     private Consumer<Throwable> throwableConsumer = throwable -> {

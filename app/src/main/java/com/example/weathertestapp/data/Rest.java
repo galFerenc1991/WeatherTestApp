@@ -23,7 +23,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 @Singleton
 public class Rest {
 
-    private Retrofit retrofit;
+    private Retrofit mRetrofit;
 
     @Inject
     public Rest(WeatherTestApplication _application) {
@@ -55,7 +55,7 @@ public class Rest {
                 });
 
 
-        retrofit = new Retrofit.Builder()
+        mRetrofit = new Retrofit.Builder()
                 .baseUrl(RestConstants.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create(new Gson()))
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
@@ -65,9 +65,7 @@ public class Rest {
     }
 
     public WeatherService getGetWeatherService() {
-        return retrofit.create(WeatherService.class);
+        return mRetrofit.create(WeatherService.class);
     }
-
-
 }
 

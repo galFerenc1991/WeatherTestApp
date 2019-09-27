@@ -9,6 +9,8 @@ public abstract class Constants {
     public static final int REQUEST_CODE_ACTIVITY_SELECT_PLACE = 4;
 
     public static final String KEY_LOCATION_RESULT = "key_location_result";
+    public static final String KEY_CURRENT_LOCATION = "key_current_location";
+
 
 
     public static final float GOOGLE_MAP_ZOOM = 12.0f;

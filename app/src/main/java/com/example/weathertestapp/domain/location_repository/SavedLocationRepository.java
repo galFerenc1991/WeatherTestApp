@@ -14,6 +14,6 @@ public interface SavedLocationRepository {
 
     Single<SavedLocation> getSavedLocation(long _id);
 
-    Completable addToDB(SavedLocation employee);
+    Completable addToDB(SavedLocation _savedLocation);
 
 }

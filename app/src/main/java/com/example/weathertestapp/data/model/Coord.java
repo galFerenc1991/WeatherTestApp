@@ -1,48 +1,21 @@
 package com.example.weathertestapp.data.model;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import com.google.gson.annotations.SerializedName;
 
-public class Coord implements Parcelable {
-    private double lon;
-    private double lat;
+public class Coord {
+    @SerializedName("lon")
+    private double mLon;
+    @SerializedName("lat")
+    private double mLat;
 
     public double getLat() {
-        return lat;
+        return mLat;
     }
 
     public double getLon() {
-        return lon;
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeDouble(this.lon);
-        dest.writeDouble(this.lat);
+        return mLon;
     }
 
     public Coord() {
     }
-
-    protected Coord(Parcel in) {
-        this.lon = in.readDouble();
-        this.lat = in.readDouble();
-    }
-
-    public static final Parcelable.Creator<Coord> CREATOR = new Parcelable.Creator<Coord>() {
-        @Override
-        public Coord createFromParcel(Parcel source) {
-            return new Coord(source);
-        }
-
-        @Override
-        public Coord[] newArray(int size) {
-            return new Coord[size];
-        }
-    };
 }

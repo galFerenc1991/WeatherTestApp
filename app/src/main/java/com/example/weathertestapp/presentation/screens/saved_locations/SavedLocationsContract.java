@@ -14,7 +14,7 @@ import java.util.List;
  */
 
 public interface SavedLocationsContract {
-    interface View extends BaseView<Presenter> {
+    interface View extends BaseView {
         void openAutocompletePlaceScreen();
 
         void returnPlace(LatLng _selectedCity);
@@ -31,6 +31,6 @@ public interface SavedLocationsContract {
 
         void placeSelected(LatLng _selectedCity);
 
-        void selectItem(int position);
+        void selectItem(int _position);
     }
 }

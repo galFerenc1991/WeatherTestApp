@@ -17,7 +17,7 @@ public interface SavedLocationDao {
     @Query("SELECT * FROM savedLocation")
     Single<List<SavedLocation>> getAll();
 
-    @Query("SELECT * FROM savedLocation WHERE id = :id")
+    @Query("SELECT * FROM savedLocation WHERE mId = :id")
     Single<SavedLocation> getById(long id);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

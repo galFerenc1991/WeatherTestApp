@@ -31,7 +31,7 @@ public class LocationManager implements LifecycleObserver {
     private final AppCompatActivity mActivity;
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private LocationRequest mLocationRequest;
-    private MutableLiveData<Location> liveData = new MutableLiveData<>();
+    private MutableLiveData<Location> mLiveData = new MutableLiveData<>();
 
     @Inject
     public LocationManager(AppCompatActivity _activity) {
@@ -41,10 +41,9 @@ public class LocationManager implements LifecycleObserver {
     }
 
     public LiveData<Location> getData() {
-        return liveData;
+        return mLiveData;
     }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
     public void updateLocation() {
         checkLocationRequestSettings();
     }
@@ -53,7 +52,7 @@ public class LocationManager implements LifecycleObserver {
         @Override
         public void onLocationResult(LocationResult locationResult) {
             super.onLocationResult(locationResult);
-            liveData.setValue(locationResult.getLastLocation());
+            mLiveData.setValue(locationResult.getLastLocation());
         }
     };
 

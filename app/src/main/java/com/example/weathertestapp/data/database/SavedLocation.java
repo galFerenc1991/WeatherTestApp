@@ -7,59 +7,58 @@ import androidx.room.PrimaryKey;
 public class SavedLocation {
 
     @PrimaryKey
-    public long id;
+    public long mId;
 
-    public String cityName;
-    public double lat;
-    public double lon;
+    public String mCityName;
+    public double mLat;
+    public double mLon;
 
     public long getId() {
-        return id;
+        return mId;
     }
 
     public String getCityName() {
-        return cityName;
+        return mCityName;
     }
 
     public double getLat() {
-        return lat;
+        return mLat;
     }
 
     public double getLon() {
-        return lon;
+        return mLon;
     }
 
     public static class Builder {
 
-        protected SavedLocation savedLocation;
+        protected SavedLocation mSavedLocation;
 
         public Builder() {
-            savedLocation = new SavedLocation();
+            mSavedLocation = new SavedLocation();
         }
 
         public Builder setID(long _id) {
-            savedLocation.id = _id;
+            mSavedLocation.mId = _id;
             return this;
         }
 
         public Builder setCityName(String _name) {
-            savedLocation.cityName = _name;
+            mSavedLocation.mCityName = _name;
             return this;
         }
 
-
         public Builder setLat(double _lat) {
-            savedLocation.lat = _lat;
+            mSavedLocation.mLat = _lat;
             return this;
         }
 
         public Builder setLon(double _lon) {
-            savedLocation.lon = _lon;
+            mSavedLocation.mLon = _lon;
             return this;
         }
 
         public SavedLocation build() {
-            return savedLocation;
+            return mSavedLocation;
         }
     }
 }

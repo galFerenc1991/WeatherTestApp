@@ -68,8 +68,8 @@ public class SavedLocationsPresenter implements SavedLocationsContract.Presenter
     }
 
     @Override
-    public void selectItem(int position) {
-        SavedLocation savedLocation = mSavedLocation.get(position);
+    public void selectItem(int _position) {
+        SavedLocation savedLocation = mSavedLocation.get(_position);
         LatLng latLng = new LatLng(savedLocation.getLat(), savedLocation.getLon());
         mView.returnPlace(latLng);
     }
